@@ -10,7 +10,7 @@
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
     android:paddingTop="15dp"
-    android:text="NewsTitle"
+    android:text="Area"
     android:textSize="18sp">
 
 </TextView>

@@ -1,12 +1,12 @@
 package com.coolweather.android.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coolweather.android.R;
+import com.coolweather.android.activity.WeatherActivity;
 import com.coolweather.android.db.City;
 import com.coolweather.android.db.County;
 import com.coolweather.android.db.Province;
@@ -28,7 +29,6 @@ import org.litepal.crud.DataSupport;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.jar.JarEntry;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -318,14 +318,25 @@ public class ChooseAreaFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     String area = mAreaList.get(holder.getAdapterPosition());
-                    LogUtils.d(TAG, "选择了地区 ：" + area);
 
                     if (currentLevel == LEVEL_PROVINCE) {
                         selectProvince = provinceList.get(position);
+                        LogUtils.d(TAG, "选择了: " + area + " 省份级别  代码为: " + selectProvince.getProvinceCode());
                         queryCities();
                     } else if (currentLevel == LEVEL_CITY) {
                         selectCity = cityList.get(position);
+                        LogUtils.d(TAG, "选择了: " + area + " 城市级别  代码为: " + selectCity.getCityCode());
                         queryCounties();
+                    } else if (currentLevel == LEVEL_COUNTY) {
+                        selectCounty = countyList.get(position);
+                        String weatherId = selectCounty.getWeatherId();
+                        LogUtils.d(TAG, "选择了: " + area + " 县城级别  天气代码为: " + weatherId);
+
+//                        开启显示天气的activity
+                        Intent intent = new Intent(getActivity(), WeatherActivity.class);
+                        intent.putExtra("weather_id", weatherId);
+                        startActivity(intent);
+                        getActivity().finish();
                     }
                 }
             });

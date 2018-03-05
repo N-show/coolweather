@@ -3,11 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize">
 
+    <Button
+        android:id="@+id/nav_button"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/nav_button"
+        android:visibility="visible" />
+
     <TextView
         android:id="@+id/title_city"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_alignTop="@+id/nav_button"
+        android:layout_centerHorizontal="true"
         android:text="北京"
         android:textColor="@color/weatherTextColor"
         android:textSize="20sp" />
@@ -16,8 +26,8 @@
         android:id="@+id/title_update_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/title_city"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
         android:text="2017-10-26 23:09"
         android:textColor="@color/weatherTextColor"

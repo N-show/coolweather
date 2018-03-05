@@ -11,6 +11,7 @@
     android:paddingRight="10dp"
     android:paddingTop="15dp"
     android:text="Area"
+    android:textColor="#8000"
     android:textSize="18sp">
 
 </TextView>

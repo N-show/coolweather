@@ -9,11 +9,59 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="15dp"
-        android:text="预报"
+        android:text="未来七天预报"
         android:textColor="@color/weatherTextColor"
         android:textSize="20sp" />
+
+    <LinearLayout
+        android:layout_margin="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/date_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:text="日期"
+            android:textColor="@color/weatherTextColor" />
+
+        <TextView
+            android:id="@+id/info_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="天气概况"
+            android:textColor="@color/weatherTextColor" />
+
+        <TextView
+            android:id="@+id/mix_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="最低气温"
+            android:textColor="@color/weatherTextColor" />
+
+        <TextView
+            android:id="@+id/max_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="最高气温"
+            android:textColor="@color/weatherTextColor" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/forecast_layout"

@@ -15,6 +15,11 @@
         android:textColor="@color/weatherTextColor"
         android:textSize="30sp" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="10dp"
+        android:background="#000" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -53,11 +58,11 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
+        android:layout_marginTop="10dp"
         android:background="#000" />
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -96,11 +101,11 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
+        android:layout_marginTop="10dp"
         android:background="#000" />
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -139,9 +144,10 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
+        android:layout_marginTop="10dp"
         android:background="#000" />
 
     <LinearLayout
@@ -181,9 +187,10 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
+        android:layout_marginTop="10dp"
         android:background="#000" />
 
 

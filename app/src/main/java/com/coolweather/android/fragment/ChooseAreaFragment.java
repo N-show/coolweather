@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coolweather.android.R;
+import com.coolweather.android.activity.MainActivity;
 import com.coolweather.android.activity.WeatherActivity;
 import com.coolweather.android.db.City;
 import com.coolweather.android.db.County;
@@ -28,6 +29,7 @@ import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import okhttp3.Call;
@@ -44,6 +46,7 @@ public class ChooseAreaFragment extends Fragment {
     public static final int LEVEL_PROVINCE = 0;
     public static final int LEVEL_CITY = 1;
     public static final int LEVEL_COUNTY = 2;
+    public static final int MIN_CLICK_DELAY_TIME = 600;
     public final String TAG = getClass().getSimpleName();
     /**
      * 当前选中的省
@@ -57,7 +60,7 @@ public class ChooseAreaFragment extends Fragment {
      * 当前选中的县
      */
     County selectCounty;
-
+    private long lastClickTime = 0;
     private TextView titleText;
     private Button backButton;
     private RecyclerView recyclerView;
@@ -124,13 +127,14 @@ public class ChooseAreaFragment extends Fragment {
      * 查询全国所有的省 优先从数据库查询 没有查询到再去服务器上查询
      */
     private void queryProvinces() {
-        titleText.setText("中国");
         backButton.setVisibility(View.GONE);
 
         provinceList = DataSupport.findAll(Province.class);
         LogUtils.d(TAG, "provinceList size:" + provinceList.size());
 
         if (provinceList.size() > 0) {
+            titleText.setText("中国");
+
             dataList.clear();
 
             for (Province province : provinceList) {
@@ -222,7 +226,7 @@ public class ChooseAreaFragment extends Fragment {
                     @Override
                     public void run() {
                         closeProgress();
-                        Toast.makeText(getActivity(), "加载失败", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "地区加载失败 请检查网络", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -314,29 +318,45 @@ public class ChooseAreaFragment extends Fragment {
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
 
-
                 @Override
                 public void onClick(View v) {
-                    String area = mAreaList.get(holder.getAdapterPosition());
 
-                    if (currentLevel == LEVEL_PROVINCE) {
-                        selectProvince = provinceList.get(position);
-                        LogUtils.d(TAG, "选择了: " + area + " 省份级别  代码为: " + selectProvince.getProvinceCode());
-                        queryCities();
-                    } else if (currentLevel == LEVEL_CITY) {
-                        selectCity = cityList.get(position);
-                        LogUtils.d(TAG, "选择了: " + area + " 城市级别  代码为: " + selectCity.getCityCode());
-                        queryCounties();
-                    } else if (currentLevel == LEVEL_COUNTY) {
-                        selectCounty = countyList.get(position);
-                        String weatherId = selectCounty.getWeatherId();
-                        LogUtils.d(TAG, "选择了: " + area + " 县城级别  天气代码为: " + weatherId);
+//                    如果2次点击的间隔大于这个设定间隔
+                    long currentTime = Calendar.getInstance().getTimeInMillis();
+                    if (currentTime - lastClickTime > MIN_CLICK_DELAY_TIME) {
+                        lastClickTime = currentTime;
+
+                        String area = mAreaList.get(holder.getAdapterPosition());
+
+                        if (currentLevel == LEVEL_PROVINCE) {
+                            selectProvince = provinceList.get(position);
+                            LogUtils.d(TAG, "选择了: " + area + " 省份级别  代码为: " + selectProvince.getProvinceCode());
+                            queryCities();
+                        } else if (currentLevel == LEVEL_CITY) {
+                            selectCity = cityList.get(position);
+                            LogUtils.d(TAG, "选择了: " + area + " 城市级别  代码为: " + selectCity.getCityCode());
+                            queryCounties();
+                        } else if (currentLevel == LEVEL_COUNTY) {
+                            selectCounty = countyList.get(position);
+                            String weatherId = selectCounty.getWeatherId();
+                            LogUtils.d(TAG, "选择了: " + area + " 县城级别  天气代码为: " + weatherId);
+
+//                            如果是在mainactivity界面需要跳转否则只是刷新
+                            if (getActivity() instanceof MainActivity) {
 
 //                        开启显示天气的activity
-                        Intent intent = new Intent(getActivity(), WeatherActivity.class);
-                        intent.putExtra("weather_id", weatherId);
-                        startActivity(intent);
-                        getActivity().finish();
+                                Intent intent = new Intent(getActivity(), WeatherActivity.class);
+                                intent.putExtra("weather_id", weatherId);
+                                startActivity(intent);
+                                getActivity().finish();
+                            } else if (getActivity() instanceof WeatherActivity) {
+
+                                WeatherActivity weatherActivity = (WeatherActivity) getActivity();
+                                weatherActivity.drawerLayout.closeDrawers();
+                                weatherActivity.swipeRefreshLayout.setRefreshing(true);
+                                weatherActivity.requestWeather(weatherId);
+                            }
+                        }
                     }
                 }
             });

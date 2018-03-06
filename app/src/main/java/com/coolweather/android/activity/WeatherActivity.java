@@ -1,5 +1,6 @@
 package com.coolweather.android.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
@@ -22,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.coolweather.android.R;
 import com.coolweather.android.gson.Forecast;
 import com.coolweather.android.gson.Weather;
+import com.coolweather.android.service.AutoUpdateService;
 import com.coolweather.android.util.HttpUtil;
 import com.coolweather.android.util.LogUtils;
 import com.coolweather.android.util.Utility;
@@ -77,12 +79,12 @@ public class WeatherActivity extends AppCompatActivity {
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String weatherInfo = preferences.getString("weather", null);
         weatherId = getIntent().getStringExtra("weather_id");
-        LogUtils.d(TAG, "weatherId:" + weatherId);
+        LogUtils.d(TAG, "通过chooseAreaFragment跳转过来的weatherId:" + weatherId);
 
 
         if (weatherInfo != null) {
             Weather weather = Utility.handleWeatherResponse(weatherInfo);
-            LogUtils.d(TAG, "本地查询的weatherId是：" + weatherId);
+            LogUtils.d(TAG, "本地查询的weatherId是：" + weather.basic.weatherId);
 
             showWeatherInfo(weather);
         } else {
@@ -315,5 +317,11 @@ public class WeatherActivity extends AppCompatActivity {
 
         weatherLayout.setVisibility(View.VISIBLE);
 
+        if (weather != null && "ok".equals(weather.status)) {
+            Intent intent = new Intent(this, AutoUpdateService.class);
+            startService(intent);
+        } else {
+            Toast.makeText(this, "无法获取天气信息 服务开启失败", Toast.LENGTH_SHORT).show();
+        }
     }
 }
